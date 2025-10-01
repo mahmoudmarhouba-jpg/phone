@@ -1,0 +1,49 @@
+<div class="h-full w-full flex flex-col">
+    <!-- Header -->
+    <header class="sticky top-0 z-20 p-2 border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-black/80 backdrop-blur-xl flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+             <button (click)="cancel()" class="p-2 font-semibold">Cancel</button>
+        </div>
+        <h2 class="text-xl font-bold">Edit profile</h2>
+         <button 
+            (click)="save()" 
+            class="px-4 py-1 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold disabled:opacity-50"
+            [disabled]="displayName() === user()?.displayName && bio() === user()?.bio"
+        >
+            Save
+        </button>
+    </header>
+
+    <!-- Profile Edit Form -->
+    @if (user(); as u) {
+      <div class="flex-grow overflow-y-auto">
+          <div class="relative h-32 bg-gray-300 dark:bg-gray-700">
+              <img [src]="u.headerUrl" alt="header" class="w-full h-full object-cover">
+              <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                <button class="p-2 bg-black/50 rounded-full hover:bg-black/70 transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                </button>
+              </div>
+              <div class="absolute -bottom-12 left-4 w-24 h-24 rounded-full border-4 border-white dark:border-black bg-gray-500">
+                <img [src]="u.avatarUrl" alt="avatar" class="w-full h-full rounded-full object-cover">
+                 <div class="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                   <button class="p-2 bg-black/50 rounded-full">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                   </button>
+                 </div>
+              </div>
+          </div>
+          
+          <div class="p-4 pt-16 space-y-6">
+              <div class="relative">
+                <label for="name" class="absolute -top-2 left-2 px-1 bg-white dark:bg-black text-xs text-gray-500">Name</label>
+                <input id="name" type="text" [(ngModel)]="displayName" class="w-full bg-transparent border border-gray-300 dark:border-gray-700 rounded-md py-3 px-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              </div>
+               <div class="relative">
+                <label for="bio" class="absolute -top-2 left-2 px-1 bg-white dark:bg-black text-xs text-gray-500">Bio</label>
+                <textarea id="bio" [(ngModel)]="bio" class="w-full bg-transparent border border-gray-300 dark:border-gray-700 rounded-md py-3 px-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none" rows="3"></textarea>
+              </div>
+          </div>
+      </div>
+    }
+</div>

@@ -1,0 +1,41 @@
+<div class="h-full w-full flex flex-col">
+    <!-- Header -->
+    <header class="sticky top-0 z-10 p-4 border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-black/80 backdrop-blur-xl">
+        <h1 class="text-2xl font-bold">Notifications</h1>
+    </header>
+
+    <!-- Notification List -->
+    <div class="divide-y divide-gray-200 dark:divide-gray-800">
+        @for(notification of zappState.notifications(); track notification.id) {
+            <div class="p-4 flex space-x-4" [class.bg-blue-500/10]="!notification.isRead">
+                <div class="w-8 flex-shrink-0 text-center">
+                    @switch (notification.type) {
+                        @case ('like') {
+                            <svg class="w-8 h-8 text-pink-500" fill="currentColor" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 015.105 0L12 9.405l2.577-3.087a4.5 4.5 0 015.105 0 4.493 4.493 0 010 6.354L12 21l-7.682-8.328a4.493 4.493 0 010-6.354z" /></svg>
+                        }
+                        @case ('repost') {
+                             <svg class="w-8 h-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h5M20 20v-5h-5M4 20l16-16" /></svg>
+                        }
+                        @case ('follow') {
+                            <svg class="w-8 h-8 text-blue-500" fill="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                        }
+                    }
+                </div>
+                <div class="flex-grow">
+                    <img [src]="notification.fromUser.avatarUrl" alt="avatar" class="w-8 h-8 rounded-full mb-2">
+                    <p>
+                        <span class="font-bold">{{ notification.fromUser.displayName }}</span>
+                        @switch (notification.type) {
+                            @case ('like') { liked your post }
+                            @case ('repost') { reposted your post }
+                            @case ('follow') { followed you }
+                        }
+                    </p>
+                    @if(notification.post) {
+                        <p class="text-gray-500 mt-1">"{{ notification.post.text }}"</p>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

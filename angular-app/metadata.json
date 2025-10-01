@@ -1,0 +1,5 @@
+{
+  "name": "NeoCall - FiveM NUI",
+  "description": "A feature-rich, modern smartphone UI for FiveM, built with Angular and Tailwind CSS. It includes contacts, SMS, calling, and a foundation for more apps.",
+  "requestFramePermissions": []
+}

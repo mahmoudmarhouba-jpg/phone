@@ -1,0 +1,26 @@
+<div class="h-full w-full flex flex-col bg-gray-100 dark:bg-black">
+    <!-- Header -->
+    <header class="sticky top-0 z-10 p-3 border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-black/80 backdrop-blur-xl flex justify-between items-center">
+        <button (click)="cancel()" class="font-semibold text-lg">Cancel</button>
+        <h2 class="font-bold text-lg">New Post</h2>
+        <button (click)="share()" class="font-bold text-lg text-blue-500">Share</button>
+    </header>
+
+    <!-- Post Form -->
+    <div class="p-4 flex flex-col space-y-4">
+        <div class="flex items-start space-x-3">
+            <img [src]="previewImageUrl" alt="New post preview" class="w-20 h-20 object-cover rounded-lg">
+            <textarea 
+                [(ngModel)]="caption"
+                placeholder="Write a caption..."
+                class="w-full h-20 bg-transparent focus:outline-none text-base"
+            ></textarea>
+        </div>
+        <div class="border-t border-b border-gray-200 dark:border-gray-800 py-3">
+            <button class="w-full text-left text-lg">Tag People</button>
+        </div>
+         <div class="border-b border-gray-200 dark:border-gray-800 pb-3">
+            <button class="w-full text-left text-lg">Add Location</button>
+        </div>
+    </div>
+</div>

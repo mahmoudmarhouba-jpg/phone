@@ -1,0 +1,69 @@
+<div class="h-full w-full flex flex-col relative">
+    <!-- Header -->
+    <div class="p-4 pt-12 flex items-center flex-shrink-0">
+        <button (click)="flowpay.setView('dashboard')" class="p-2 -ml-2 text-red-500 dark:text-red-400">
+             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+        </button>
+        <h1 class="text-xl font-bold mx-auto pr-6">Send Money</h1>
+    </div>
+
+    <!-- Transfer Form -->
+    <div class="p-4 space-y-6">
+        <div>
+            <label for="recipient" class="text-sm font-semibold text-gray-600 dark:text-gray-400">Recipient</label>
+            <input id="recipient" type="text" [(ngModel)]="recipient" placeholder="Enter phone number or ID" class="w-full mt-1 bg-white dark:bg-zinc-800 rounded-lg py-3 px-4 text-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+        </div>
+        <div>
+            <label for="amount" class="text-sm font-semibold text-gray-600 dark:text-gray-400">Amount</label>
+            <div class="relative mt-1">
+                 <span class="absolute left-3 top-1/2 -translate-y-1/2 text-lg text-gray-400">$</span>
+                 <input id="amount" type="number" [(ngModel)]="amount" placeholder="0.00" class="w-full bg-white dark:bg-zinc-800 rounded-lg py-3 pl-7 pr-4 text-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+            </div>
+             <p class="text-xs text-gray-500 mt-1 text-right">Available: {{ flowpay.account().balance | currency }}</p>
+        </div>
+         <div>
+            <label for="note" class="text-sm font-semibold text-gray-600 dark:text-gray-400">Note (Optional)</label>
+            <input id="note" type="text" [(ngModel)]="note" placeholder="e.g., For dinner" class="w-full mt-1 bg-white dark:bg-zinc-800 rounded-lg py-3 px-4 text-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+        </div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="flex-grow flex flex-col justify-end p-4">
+        <div class="flex items-center space-x-2">
+            <button (click)="showConfirmation()" [disabled]="!isFormValid" class="w-full bg-red-600 text-white font-bold py-4 rounded-xl text-lg disabled:bg-red-400 dark:disabled:bg-red-800 disabled:text-gray-300 dark:disabled:text-gray-500 transition-colors">
+                Continue
+            </button>
+            <button (click)="sendViaAirdrop()" [disabled]="!isAirdropFormValid" class="flex-shrink-0 w-16 h-16 bg-blue-500 text-white rounded-xl flex items-center justify-center disabled:bg-blue-300 dark:disabled:bg-blue-800 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12s-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" /></svg>
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<!-- Confirmation Modal -->
+@if(isConfirmModalVisible()) {
+    <div (click)="hideConfirmation()" class="absolute inset-0 z-20 bg-black/50 backdrop-blur-sm animate-fade-in">
+        <div (click)="$event.stopPropagation()" class="absolute bottom-0 left-0 right-0 bg-gray-200/60 dark:bg-zinc-800/60 backdrop-blur-xl rounded-t-3xl p-6 animate-slide-in-up">
+            <h2 class="text-2xl font-bold text-center">Confirm Transfer</h2>
+            <div class="my-6 space-y-3">
+                <div class="flex justify-between text-lg">
+                    <span class="text-gray-600 dark:text-gray-400">To:</span>
+                    <span class="font-semibold">{{ recipient() }}</span>
+                </div>
+                 <div class="flex justify-between text-lg">
+                    <span class="text-gray-600 dark:text-gray-400">Note:</span>
+                    <span class="font-semibold">{{ note() || 'N/A' }}</span>
+                </div>
+                 <hr class="border-gray-300 dark:border-zinc-600 my-2">
+                 <div class="flex justify-between text-2xl">
+                    <span class="text-gray-600 dark:text-gray-400">Amount:</span>
+                    <span class="font-bold text-red-600 dark:text-red-400">{{ amount() | currency }}</span>
+                </div>
+            </div>
+            <button (click)="confirmTransfer()" class="w-full bg-red-600 text-white font-bold py-4 rounded-xl text-lg">
+                Send Payment
+            </button>
+        </div>
+    </div>
+}

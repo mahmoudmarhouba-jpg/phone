@@ -1,0 +1,36 @@
+<!-- Header -->
+<header class="sticky top-0 z-10 p-2 border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-black/80 backdrop-blur-xl flex justify-between items-center">
+    <h1 class="text-3xl font-serif ml-2">Pixi</h1>
+    <div class="flex items-center space-x-2">
+         <button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        </button>
+        <button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.056 3 11.625c0 4.207 2.903 7.738 6.836 8.164v-5.614H7.64v-2.58h2.196v-1.99c0-2.166 1.258-3.397 3.27-3.397 1.026 0 1.905.076 2.163.11v2.308h-1.355c-1.09 0-1.302.518-1.302 1.278v1.625h2.56l-.34 2.58h-2.22v6.614A8.201 8.201 0 0012 20.25z" /></svg>
+        </button>
+    </div>
+</header>
+
+<!-- Stories Bar -->
+<div class="p-3 border-b border-gray-200 dark:border-gray-800">
+    <div class="flex space-x-4 overflow-x-auto phone-screen">
+        @for(user of pixiState.stories(); track user.id) {
+            <div (click)="openStory(user)" class="flex flex-col items-center space-y-1 flex-shrink-0 cursor-pointer">
+                <div class="relative">
+                    <img [src]="user.avatarUrl" alt="avatar" class="w-20 h-20 rounded-full p-1" >
+                    <div class="absolute inset-0 rounded-full" [class.bg-gradient-to-tr]="user.hasUnreadStory" [class.from-yellow-400]="user.hasUnreadStory" [class.via-red-500]="user.hasUnreadStory" [class.to-purple-500]="user.hasUnreadStory" [class.border-2]="!user.hasUnreadStory" [class.border-gray-300]="!user.hasUnreadStory" [class.dark:border-gray-700]="!user.hasUnreadStory"></div>
+                     <img [src]="user.avatarUrl" alt="avatar" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[72px] h-[72px] rounded-full border-2 border-white dark:border-black" >
+                </div>
+                <span class="text-xs w-20 truncate text-center">{{user.displayName}}</span>
+            </div>
+        }
+    </div>
+</div>
+
+
+<!-- Post Feed -->
+<div class="divide-y divide-gray-200 dark:divide-gray-800">
+    @for(post of pixiState.posts(); track post.id) {
+        <app-pixi-post [post]="post"/>
+    }
+</div>

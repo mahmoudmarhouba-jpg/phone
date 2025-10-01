@@ -1,0 +1,65 @@
+<article (click)="viewPostDetails()" class="p-4 flex space-x-4 hover:bg-gray-50/50 dark:hover:bg-white/5 cursor-pointer">
+  <div class="flex-shrink-0">
+    <img [src]="post().author.avatarUrl" alt="author avatar" class="w-12 h-12 rounded-full">
+  </div>
+  <div class="flex-grow">
+    <!-- Post Header -->
+    <div class="flex items-baseline space-x-2">
+      <span class="font-bold">{{ post().author.displayName }}</span>
+      @if(post().author.isVerified) {
+        <svg class="w-4 h-4 text-blue-500" viewBox="0 0 24 24" fill="currentColor"><path d="M10,17L5,12L6.41,10.58L10,14.17L17.59,6.58L19,8M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"></path></svg>
+      }
+      <span class="text-gray-500">@{{ post().author.username }}</span>
+      <span class="text-gray-500">·</span>
+      <span class="text-gray-500 text-sm">{{ post().timestamp | date:'short' }}</span>
+    </div>
+
+    <!-- Replying To -->
+    @if(post().inReplyToUser; as replyTo) {
+        <p class="text-gray-500 mt-1">Replying to <span class="text-blue-500">@{{ replyTo.username }}</span></p>
+    }
+
+    <!-- Post Content -->
+    <p class="mt-1 whitespace-pre-wrap" [innerHTML]="formattedText"></p>
+    
+    @if(post().imageUrl) {
+        <img [src]="post().imageUrl" alt="post image" class="mt-2 rounded-2xl border border-gray-200 dark:border-gray-800 max-h-96 w-full object-cover">
+    }
+
+    <!-- Post Actions -->
+    <div class="mt-3 flex justify-between items-center text-gray-500 max-w-sm">
+      <!-- Comments -->
+      <button class="flex items-center space-x-2 hover:text-blue-500">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+        <span>{{ post().comments.length }}</span>
+      </button>
+
+      <!-- Reposts (Re-Z) -->
+      <button (click)="toggleRepost($event)" class="flex items-center space-x-2" [class.text-green-500]="post().isReposted" [class.hover:text-green-500]="!post().isReposted">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h5M20 20v-5h-5M4 20l16-16" /></svg>
+        <span>{{ post().reposts }}</span>
+      </button>
+
+      <!-- Likes -->
+      <button (click)="toggleLike($event)" class="flex items-center space-x-2" [class.text-pink-500]="post().isLiked" [class.hover:text-pink-500]="!post().isLiked">
+        <svg class="w-5 h-5" [attr.fill]="post().isLiked ? 'currentColor' : 'none'" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 015.105 0L12 9.405l2.577-3.087a4.5 4.5 0 015.105 0 4.493 4.493 0 010 6.354L12 21l-7.682-8.328a4.493 4.493 0 010-6.354z" /></svg>
+        <span>{{ post().likes }}</span>
+      </button>
+      
+      <!-- Share -->
+       <button class="flex items-center space-x-2 hover:text-blue-500">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.056 3 11.625c0 4.207 2.903 7.738 6.836 8.164v-5.614H7.64v-2.58h2.196v-1.99c0-2.166 1.258-3.397 3.27-3.397 1.026 0 1.905.076 2.163.11v2.308h-1.355c-1.09 0-1.302.518-1.302 1.278v1.625h2.56l-.34 2.58h-2.22v6.614A8.201 8.201 0 0012 20.25z" /></svg>
+      </button>
+
+      <!-- Bookmark -->
+      <button class="flex items-center space-x-2 hover:text-blue-500">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
+      </button>
+
+      <!-- Analytics -->
+       <button class="flex items-center space-x-2 hover:text-blue-500">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+      </button>
+    </div>
+  </div>
+</article>

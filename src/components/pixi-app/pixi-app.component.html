@@ -1,0 +1,58 @@
+<div class="h-full bg-white dark:bg-black text-gray-900 dark:text-white flex flex-col font-sans overflow-hidden">
+  @if (pixiState.isLoggedIn()) {
+      <!-- Main Content Area -->
+      <main class="flex-grow overflow-y-auto phone-screen">
+         @switch (pixiState.currentView()) {
+            @case ('feed') { <app-pixi-feed /> }
+            @case ('explore') { <app-pixi-explore /> }
+            @case ('create') { <app-pixi-create-post /> }
+            @case ('notifications') { <app-pixi-notifications /> }
+            @case ('profile') { <app-pixi-profile /> }
+         }
+      </main>
+
+      <!-- Bottom Tab Bar -->
+      @if(pixiState.currentView() !== 'create') {
+        <footer class="flex-shrink-0 border-t border-gray-200 dark:border-gray-800 bg-gray-50/80 dark:bg-black/80 backdrop-blur-xl">
+          <div class="grid grid-cols-5 text-center text-gray-800 dark:text-gray-200">
+            <!-- Home -->
+            <button (click)="pixiState.setView('feed')" class="p-3 flex justify-center items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 24 24" [attr.fill]="pixiState.currentView() === 'feed' ? 'currentColor' : 'none'" [attr.stroke]="pixiState.currentView() !== 'feed' ? 'currentColor' : 'none'" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+            </button>
+            <!-- Explore -->
+             <button (click)="pixiState.setView('explore')" class="p-3 flex justify-center items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" [attr.fill]="pixiState.currentView() === 'explore' ? 'currentColor' : 'none'" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                 @if(pixiState.currentView() === 'explore') {
+                    <path d="M10 4a6 6 0 100 12 6 6 0 000-12z" />
+                }
+              </svg>
+            </button>
+            <!-- Create Post -->
+             <button (click)="pixiState.setView('create')" class="p-3 flex justify-center items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </button>
+            <!-- Notifications (Reels stub) -->
+             <button (click)="pixiState.setView('notifications')" class="p-3 flex justify-center items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" [attr.fill]="pixiState.currentView() === 'notifications' ? 'currentColor' : 'none'" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 015.105 0L12 9.405l2.577-3.087a4.5 4.5 0 015.105 0 4.493 4.493 0 010 6.354L12 21l-7.682-8.328a4.493 4.493 0 010-6.354z" />
+              </svg>
+            </button>
+            <!-- Profile -->
+             <button (click)="pixiState.setView('profile')" class="p-3 flex justify-center items-center">
+              <img [src]="pixiState.currentUser()?.avatarUrl" class="h-7 w-7 rounded-full" [class.border-2]="pixiState.currentView() === 'profile'" [class.border-black]="pixiState.currentView() === 'profile'" [class.dark:border-white]="pixiState.currentView() === 'profile'">
+            </button>
+          </div>
+        </footer>
+      }
+  } @else {
+    <app-pixi-login />
+  }
+
+  <!-- Story Viewer Overlay -->
+  @if(pixiState.isStoryViewerVisible()) {
+    <app-pixi-story-viewer class="absolute inset-0 z-50 animate-fade-in"/>
+  }
+</div>

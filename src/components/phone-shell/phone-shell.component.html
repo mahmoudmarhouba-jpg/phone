@@ -1,0 +1,109 @@
+<!-- Phone Screen Content -->
+<div 
+    class="relative w-full h-full bg-white dark:bg-black overflow-hidden"
+    [class.dark]="phoneState.theme() === 'dark'"
+>
+    @if (phoneState.isFirstTimeSetupComplete()) {
+        
+        @if (phoneState.isLocked()) {
+            <app-lock-screen (unlock)="unlockPhone()" />
+        } @else {
+            <!-- Wallpaper -->
+            <div class="absolute inset-0 z-0">
+                <img [src]="phoneState.wallpaperUrl()" alt="Wallpaper" class="w-full h-full object-cover transition-all duration-300 ease-in-out">
+                <!-- Screen Dimmer -->
+                <div class="absolute inset-0 bg-black/10 dark:bg-black/30"></div>
+            </div>
+
+            <!-- Screen Content Wrapper -->
+            <div class="relative z-10 w-full h-full flex flex-col pt-4">
+                
+                <!-- Status Bar with Dynamic Island -->
+                <app-status-bar (toggleControlCenter)="toggleControlCenter()" />
+                
+                <!-- App Container -->
+                <main class="flex-grow overflow-y-auto phone-screen">
+                @switch (phoneState.currentView()) {
+                    @case ('home') {
+                    <app-home-screen />
+                    }
+                    @case ('contacts') {
+                    <app-contacts-app />
+                    }
+                    @case ('sms') {
+                    <app-sms-app />
+                    }
+                    @case ('chat') {
+                        <app-chat-view />
+                    }
+                    @case ('dialer') {
+                        <app-dialer-app />
+                    }
+                    @case ('call') {
+                    <app-call-screen />
+                    }
+                    @case ('settings') {
+                    <app-settings-app />
+                    }
+                    @case ('settings-wallpaper') {
+                    <app-wallpaper-settings />
+                    }
+                    @case ('flowpay') {
+                    <app-flowpay-app />
+                    }
+                    @case ('camera') {
+                    <app-camera-app />
+                    }
+                    @case ('gps') {
+                    <app-gps-app />
+                    }
+                    @case ('app-library') {
+                    <app-library />
+                    }
+                    @case ('nexa-store') {
+                    <app-nexa-store-app />
+                    }
+                    @case ('lifinvader') {
+                        <app-lifinvader-app />
+                    }
+                    @case ('bleeter') {
+                        <app-bleeter-app />
+                    }
+                    @case ('dynasty8') {
+                        <app-dynasty8-app />
+                    }
+                    @case ('z-app') {
+                        <app-z-app />
+                    }
+                    @case ('pixi-app') {
+                        <app-pixi-app />
+                    }
+                    @default {
+                    <div class="p-4 text-white">App not found: {{ phoneState.currentView() }}</div>
+                    }
+                }
+                </main>
+
+                <!-- Floating Home Bar -->
+                <footer class="h-8 flex-shrink-0 flex items-center justify-center pb-2">
+                <button (click)="goHome()" class="w-36 h-[5px] bg-gray-800/80 dark:bg-white/80 rounded-full hover:bg-black dark:hover:bg-white transition-colors"></button>
+                </footer>
+            </div>
+
+            <!-- Control Center Overlay -->
+            @if (phoneState.isControlCenterVisible()) {
+                <app-control-center (close)="toggleControlCenter()" />
+            }
+        }
+    } @else {
+        <app-welcome-wizard (setupComplete)="completeSetup()" />
+    }
+
+    <!-- NexaAir (AirDrop) Overlays -->
+    @if (airdropService.isSendModalVisible()) {
+        <app-airdrop-send />
+    }
+    @if (airdropService.isReceiveModalVisible()) {
+        <app-airdrop-receive />
+    }
+</div>

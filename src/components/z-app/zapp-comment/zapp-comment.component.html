@@ -1,0 +1,20 @@
+<article class="p-4 flex space-x-4">
+  <div class="flex-shrink-0">
+    <img [src]="comment().author.avatarUrl" alt="author avatar" class="w-12 h-12 rounded-full">
+  </div>
+  <div class="flex-grow">
+    <!-- Comment Header -->
+    <div class="flex items-baseline space-x-2">
+      <span class="font-bold">{{ comment().author.displayName }}</span>
+      @if(comment().author.isVerified) {
+        <svg class="w-4 h-4 text-blue-500" viewBox="0 0 24 24" fill="currentColor"><path d="M10,17L5,12L6.41,10.58L10,14.17L17.59,6.58L19,8M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"></path></svg>
+      }
+      <span class="text-gray-500">@{{ comment().author.username }}</span>
+      <span class="text-gray-500">·</span>
+      <span class="text-gray-500 text-sm">{{ comment().timestamp | date:'short' }}</span>
+    </div>
+
+    <!-- Comment Content -->
+    <p class="mt-1 whitespace-pre-wrap">{{ comment().text }}</p>
+  </div>
+</article>

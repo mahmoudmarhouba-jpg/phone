@@ -1,0 +1,31 @@
+<div class="h-full w-full flex flex-col">
+    <!-- Header -->
+    <header class="sticky top-0 z-10 p-4 border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-black/80 backdrop-blur-xl">
+        <h1 class="text-2xl font-bold">Notifications</h1>
+    </header>
+
+    <!-- Notification List -->
+    <div class="divide-y divide-gray-200 dark:divide-gray-800">
+        @for(n of pixiState.notifications(); track n.id) {
+            <div class="p-4 flex items-center space-x-4 hover:bg-gray-50 dark:hover:bg-white/5">
+                <img [src]="n.fromUser.avatarUrl" alt="avatar" class="w-12 h-12 rounded-full flex-shrink-0">
+                <div class="flex-grow">
+                    <p>
+                        <span class="font-semibold">{{ n.fromUser.username }}</span>
+                        @switch (n.type) {
+                            @case ('like') { liked your post. }
+                            @case ('comment') { commented: "Nice shot!" }
+                            @case ('follow') { started following you. }
+                        }
+                        <span class="text-gray-500 text-sm"> {{ n.timestamp | date:'shortTime' }}</span>
+                    </p>
+                </div>
+                @if(n.post) {
+                    <img [src]="n.post.imageUrl" alt="post thumbnail" class="w-12 h-12 object-cover rounded-md flex-shrink-0">
+                } @else if(n.type === 'follow') {
+                    <button class="px-4 py-1.5 bg-blue-500 text-white font-semibold rounded-lg text-sm">Follow</button>
+                }
+            </div>
+        }
+    </div>
+</div>

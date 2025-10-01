@@ -1,0 +1,67 @@
+<!-- Header -->
+<header class="sticky top-0 z-10 p-4 border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-black/80 backdrop-blur-xl flex justify-between items-center">
+  <img [src]="zappState.currentUser()?.avatarUrl" alt="avatar" class="w-8 h-8 rounded-full">
+  <!-- Z Icon -->
+  <svg class="w-7 h-7 text-black dark:text-white" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M22.52,2.57,13.1,13.82,23.48,22H21.3L12.55,14.8,5.43,22H2.08L11.89,10.18,1.52,2.57h2.2L12,8.23,20.32,2.57ZM19.29,20.45h1.56L7.33,4.11H5.66Z"></path>
+  </svg>
+   <button class="w-8 h-8 flex items-center justify-center text-gray-600 dark:text-gray-300">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+  </button>
+</header>
+
+<div class="grid grid-cols-2 border-b border-gray-200 dark:border-gray-800 font-semibold text-center text-gray-500">
+    <button (click)="setFeedTab('foryou')" class="py-3" [class.border-b-2]="activeFeedTab() === 'foryou'" [class.border-blue-500]="activeFeedTab() === 'foryou'" [class.text-black]="activeFeedTab() === 'foryou'" [class.dark:text-white]="activeFeedTab() === 'foryou'">For you</button>
+    <button (click)="setFeedTab('following')" class="py-3" [class.border-b-2]="activeFeedTab() === 'following'" [class.border-blue-500]="activeFeedTab() === 'following'" [class.text-black]="activeFeedTab() === 'following'" [class.dark:text-white]="activeFeedTab() === 'following'">Following</button>
+</div>
+
+
+<!-- Create Post Section -->
+<div class="p-4 border-b border-gray-200 dark:border-gray-800">
+  <div class="flex items-start space-x-4">
+    <img [src]="zappState.currentUser()?.avatarUrl" alt="avatar" class="w-12 h-12 rounded-full">
+    <div class="flex-grow">
+      <textarea 
+        [value]="newPostText()"
+        (input)="onInput($event)"
+        placeholder="What is happening?!"
+        class="w-full bg-transparent text-xl focus:outline-none resize-none"
+        rows="2"
+      ></textarea>
+
+      @if(attachedImageUrl(); as url) {
+        <div class="relative mt-2">
+            <img [src]="url" alt="Attached image preview" class="rounded-2xl border border-gray-200 dark:border-gray-800 max-h-96 w-full object-cover">
+            <button (click)="toggleAttachImage()" class="absolute top-2 right-2 p-1.5 bg-black/60 rounded-full text-white hover:bg-black/80">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+        </div>
+      }
+
+      <div class="flex justify-between items-center mt-2">
+        <button (click)="toggleAttachImage()" class="p-2 text-blue-500 rounded-full hover:bg-blue-500/10">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+        </button>
+
+        <div class="flex items-center space-x-4">
+          <span class="text-sm" [class.text-red-500]="characterCount() > MAX_CHARS" [class.text-gray-500]="characterCount() <= MAX_CHARS">
+            {{ characterCount() }} / {{ MAX_CHARS }}
+          </span>
+          <button 
+            (click)="createPost()"
+            [disabled]="!newPostText().trim() || characterCount() > MAX_CHARS"
+            class="px-4 py-1.5 bg-blue-500 text-white font-bold rounded-full disabled:bg-blue-300 dark:disabled:bg-blue-800">
+            Post
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Feed -->
+<div class="divide-y divide-gray-200 dark:divide-gray-800">
+  @for (post of activePosts(); track post.id) {
+    <app-zapp-post [post]="post" />
+  }
+</div>

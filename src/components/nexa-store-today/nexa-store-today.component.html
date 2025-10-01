@@ -1,0 +1,47 @@
+<div class="p-4 pt-12 space-y-6">
+  <!-- Header -->
+  <div>
+    <p class="text-xs font-semibold text-gray-500 uppercase">{{ currentDate | date:'EEEE' }}</p>
+    <h1 class="text-4xl font-bold">Today</h1>
+  </div>
+
+  <!-- Featured Banners -->
+  <div class="space-y-4">
+    @for(banner of nexaStore.featuredBanners(); track banner.id) {
+      <div (click)="viewDetails(banner.appId)" class="relative rounded-2xl overflow-hidden shadow-lg h-64 text-white cursor-pointer">
+        <img [src]="banner.imageUrl" [alt]="banner.title" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 p-4">
+          <p class="text-sm font-semibold uppercase text-blue-300">{{ banner.tagline }}</p>
+          <h2 class="text-2xl font-bold">{{ banner.title }}</h2>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- App List Section -->
+  <div>
+    <h3 class="text-2xl font-bold mb-2">Essential Apps</h3>
+     <div class="space-y-4">
+      @for (app of nexaStore.availableApps(); track app.id) {
+        <div (click)="viewDetails(app.id)" class="flex items-center space-x-4 p-2 -ml-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800/50 cursor-pointer">
+          <div class="w-16 h-16 rounded-xl bg-gray-200 dark:bg-gray-700 flex-shrink-0 flex items-center justify-center text-gray-800 dark:text-white">
+             @switch(app.icon) {
+                @case('bank') { <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg> }
+                @case('lifinvader') { <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm3.42 13.37h-2.04v-4.23c0-.94-.56-1.12-1-1.12c-.44 0-.8.25-.94.75v4.6h-2.04V9.82h2.04v1.04c.38-.62 1-1.25 2.12-1.25c1.47 0 1.88 1.15 1.88 2.58v4.18z" /></svg> }
+                @case('bleeter') { <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12c0 4.164 2.544 7.732 6.138 9.213.286.086.412.386.257.657a.5.5 0 01-.657.257C3.037 20.257 0 16.444 0 12 0 5.373 5.373 0 12 0s12 5.373 12 12-5.373 12-12 12h-2a1 1 0 01-1-1v-6a1 1 0 011-1h1.5a2.5 2.5 0 000-5H9a1 1 0 01-1-1V5a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-1.5a2.5 2.5 0 000 5H13a1 1 0 011 1v6a1 1 0 01-1 1h-1z" /></svg> }
+                @case('dynasty8') { <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg> }
+             }
+          </div>
+          <div class="flex-grow">
+            <p class="font-bold text-lg">{{ app.name }}</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">{{ app.shortDescription }}</p>
+          </div>
+          <div class="flex-shrink-0">
+            <button class="px-6 py-1.5 bg-gray-200 dark:bg-gray-700 rounded-full font-bold text-blue-500 text-sm">GET</button>
+          </div>
+        </div>
+      }
+     </div>
+  </div>
+</div>

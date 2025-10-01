@@ -1,0 +1,47 @@
+<!-- Main overlay with backdrop blur -->
+<div class="absolute inset-0 z-50 bg-black/30 backdrop-blur-sm animate-fade-in">
+  <!-- Content container that slides up -->
+  <div class="absolute bottom-0 left-0 right-0 p-4">
+    <div class="bg-gray-200/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-3xl text-gray-900 dark:text-white p-6 animate-slide-in-up">
+      
+      @if (request; as req) {
+        <!-- Header -->
+        <div class="text-center">
+            <div class="inline-block p-1 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full">
+                <img [src]="req.sender.avatar || 'https://i.pravatar.cc/150?u=' + req.sender.id" alt="Sender Avatar" class="w-24 h-24 rounded-full border-4 border-white/50 dark:border-black/50">
+            </div>
+            <p class="text-xl font-semibold mt-2">{{ req.sender.name }}</p>
+            <p class="text-gray-600 dark:text-gray-400">Would like to share a {{ req.itemType.replace('_', ' ') }}.</p>
+        </div>
+
+        <!-- Item Preview -->
+        @if (contactRequest; as contact) {
+            <div class="my-6 p-4 bg-black/10 dark:bg-white/10 rounded-2xl flex items-center space-x-4">
+                <img [src]="contact.avatar || 'https://i.pravatar.cc/150?u=' + contact.id" alt="Contact Avatar" class="w-14 h-14 rounded-full">
+                <div>
+                    <p class="text-xl font-bold">{{ contact.name }}</p>
+                    <p class="text-gray-700 dark:text-gray-300">{{ contact.number }}</p>
+                </div>
+            </div>
+        } @else if (paymentRequest; as payment) {
+            <div class="my-6 p-4 bg-black/10 dark:bg-white/10 rounded-2xl text-center">
+                <p class="text-gray-700 dark:text-gray-300">Amount to be received:</p>
+                <p class="text-4xl font-bold text-green-600 dark:text-green-400">${{ payment.amount | number:'1.2-2' }}</p>
+                @if(payment.note) {
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Note: "{{ payment.note }}"</p>
+                }
+            </div>
+        }
+
+        <!-- Actions -->
+        <div class="mt-6 grid grid-cols-2 gap-4">
+            <button (click)="decline()" class="w-full bg-gray-500/50 text-white font-bold py-3 px-4 rounded-xl text-lg">Decline</button>
+            <button (click)="accept()" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-xl text-lg">Accept</button>
+        </div>
+      } @else {
+        <p class="text-center text-gray-500 p-8">Invalid AirDrop Request</p>
+      }
+
+    </div>
+  </div>
+</div>

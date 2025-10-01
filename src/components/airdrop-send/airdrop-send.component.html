@@ -1,0 +1,76 @@
+<!-- Main overlay with backdrop blur -->
+<div class="absolute inset-0 z-40 bg-black/30 backdrop-blur-sm animate-fade-in">
+  <!-- Content container that slides up -->
+  <div class="absolute bottom-0 left-0 right-0 p-4">
+    <div class="bg-gray-200/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-3xl text-gray-900 dark:text-white p-6 animate-slide-in-up">
+      
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <h2 class="text-2xl font-bold">NexaAir</h2>
+        <button (click)="cancel()" class="px-4 py-1.5 bg-gray-500/30 rounded-full font-semibold">Cancel</button>
+      </div>
+
+      <!-- Item Preview -->
+      @if (contactToSend; as contact) {
+        <div class="my-6 text-center">
+            <div class="inline-block p-1 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full">
+                <img [src]="contact.avatar || 'https://i.pravatar.cc/150?u=' + contact.id" alt="Contact Avatar" class="w-24 h-24 rounded-full border-4 border-white/50 dark:border-black/50">
+            </div>
+            <p class="text-xl font-semibold mt-2">{{ contact.name }}</p>
+            <p class="text-gray-600 dark:text-gray-400">Contact</p>
+        </div>
+      } @else if (paymentRequestToSend; as payment) {
+        <div class="my-6 text-center">
+            <div class="inline-flex items-center justify-center p-1 bg-gradient-to-br from-green-400 to-teal-500 rounded-full w-28 h-28">
+                <div class="w-full h-full rounded-full bg-gray-200/50 dark:bg-gray-800/50 flex items-center justify-center text-5xl font-bold text-green-800 dark:text-green-200">
+                    $
+                </div>
+            </div>
+            <p class="text-4xl font-bold mt-2">${{ payment.amount | number:'1.2-2' }}</p>
+            <p class="text-gray-600 dark:text-gray-400">Payment Request</p>
+        </div>
+      }
+
+      <!-- Dynamic Content: Player List OR Sending Progress -->
+      <div class="h-48 flex flex-col justify-center">
+        @if(airdropService.sendProgress() === 'idle') {
+          <h3 class="font-semibold text-center mb-4">Nearby People</h3>
+          <div class="grid grid-cols-4 gap-4 text-center">
+            @for (player of airdropService.nearbyPlayers(); track player.id) {
+              <button (click)="selectPlayer(player)" class="flex flex-col items-center space-y-1">
+                <img [src]="player.avatar || 'https://i.pravatar.cc/150?u=' + player.id" alt="Player Avatar" class="w-16 h-16 rounded-full">
+                <span class="text-xs w-16 truncate">{{ player.name }}</span>
+              </button>
+            } @empty {
+              <div class="col-span-4 text-center text-gray-500">
+                <div class="w-12 h-12 border-2 border-dashed border-gray-400 rounded-full animate-spin mx-auto"></div>
+                <p class="mt-2">Searching...</p>
+              </div>
+            }
+          </div>
+        } @else {
+          <!-- Sending/Sent Animation -->
+          <div class="flex flex-col items-center justify-center text-center">
+            <div class="relative">
+              <img [src]="airdropService.sendTarget()?.avatar || ''" alt="Target Avatar" class="w-24 h-24 rounded-full transition-transform duration-300" [class.scale-110]="airdropService.sendProgress() !== 'sending'">
+              
+              <!-- Progress Ring -->
+              @if(airdropService.sendProgress() === 'sending') {
+                <div class="absolute -inset-2 rounded-full border-4 border-blue-500 border-t-transparent animate-spin"></div>
+              }
+               <!-- Checkmark -->
+              @if(airdropService.sendProgress() === 'sent') {
+                 <div class="absolute -bottom-2 -right-2 w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center border-4 border-gray-200 dark:border-gray-800 animate-fade-in">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                 </div>
+              }
+            </div>
+            <p class="text-xl font-semibold mt-4 capitalize">
+              {{ airdropService.sendProgress() }}...
+            </p>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

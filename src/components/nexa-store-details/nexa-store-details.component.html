@@ -1,0 +1,90 @@
+@if(app(); as selectedApp) {
+<div class="bg-gray-100 dark:bg-black">
+    <!-- Header -->
+    <div class="p-4 pt-12 flex items-start space-x-4">
+        <div class="w-28 h-28 rounded-[2.25rem] bg-gray-300 dark:bg-gray-700 flex-shrink-0 shadow-lg flex items-center justify-center text-gray-800 dark:text-white">
+            @switch(selectedApp.icon) {
+                @case('bank') { <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg> }
+                @case('lifinvader') { <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm3.42 13.37h-2.04v-4.23c0-.94-.56-1.12-1-1.12c-.44 0-.8.25-.94.75v4.6h-2.04V9.82h2.04v1.04c.38-.62 1-1.25 2.12-1.25c1.47 0 1.88 1.15 1.88 2.58v4.18z" /></svg> }
+                @case('bleeter') { <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12c0 4.164 2.544 7.732 6.138 9.213.286.086.412.386.257.657a.5.5 0 01-.657.257C3.037 20.257 0 16.444 0 12 0 5.373 5.373 0 12 0s12 5.373 12 12-5.373 12-12 12h-2a1 1 0 01-1-1v-6a1 1 0 011-1h1.5a2.5 2.5 0 000-5H9a1 1 0 01-1-1V5a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-1.5a2.5 2.5 0 000 5H13a1 1 0 011 1v6a1 1 0 01-1 1h-1z" /></svg> }
+                @case('dynasty8') { <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg> }
+            }
+        </div>
+        <div class="pt-2">
+            <h1 class="text-2xl font-bold">{{ selectedApp.name }}</h1>
+            <p class="text-gray-500 dark:text-gray-400">{{ selectedApp.developer }}</p>
+            <div class="mt-4 flex items-center space-x-6">
+                <button (click)="handlePrimaryAction()" class="px-8 py-2 bg-blue-500 text-white rounded-full font-bold">
+                    @switch (appStatus()) {
+                        @case ('not_installed') { GET }
+                        @case ('installing') { 
+                            <div class="flex items-center space-x-2">
+                                <div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                <span>INSTALLING</span>
+                            </div>
+                        }
+                        @case ('installed') { OPEN }
+                    }
+                </button>
+                <button (click)="goBack()" class="p-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="px-4 py-2">
+      <div class="border-t border-b border-gray-200 dark:border-gray-800 grid grid-cols-3 text-center divide-x dark:divide-gray-800 py-2">
+        <div>
+          <p class="text-xl font-bold">{{ selectedApp.rating }} <span class="text-sm font-normal text-gray-400">★</span></p>
+          <p class="text-xs text-gray-500">{{ selectedApp.reviewCount | number }} Reviews</p>
+        </div>
+        <div>
+          <p class="text-xl font-bold">{{ selectedApp.version }}</p>
+          <p class="text-xs text-gray-500">Version</p>
+        </div>
+        <div>
+          <p class="text-xl font-bold">#1</p>
+          <p class="text-xs text-gray-500">{{ selectedApp.category }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screenshots -->
+    @if(selectedApp.screenshots.length > 0) {
+      <div class="px-4 py-4">
+        <h2 class="text-2xl font-bold mb-2">Preview</h2>
+        <div class="flex space-x-3 overflow-x-auto">
+          @for(shot of selectedApp.screenshots; track shot) {
+            <img [src]="shot" alt="Screenshot" class="h-80 w-auto rounded-xl flex-shrink-0">
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Description -->
+    <div class="px-4 py-4 border-t dark:border-gray-800">
+      <h2 class="text-2xl font-bold mb-2">Description</h2>
+      <p class="text-gray-600 dark:text-gray-300 whitespace-pre-wrap">{{ selectedApp.longDescription }}</p>
+    </div>
+    
+    <!-- Release Notes -->
+    <div class="px-4 py-4 border-t dark:border-gray-800">
+      <h2 class="text-2xl font-bold mb-2">What's New</h2>
+      <p class="text-gray-600 dark:text-gray-300">{{ selectedApp.releaseNotes }}</p>
+    </div>
+
+    <!-- Uninstall button -->
+    @if (appStatus() === 'installed') {
+        <div class="p-4 border-t dark:border-gray-800">
+             <button (click)="uninstallApp()" class="w-full text-center text-red-500 font-semibold py-2">Uninstall App</button>
+        </div>
+    }
+</div>
+} @else {
+    <div class="p-8 text-center">
+        <p class="mt-20 text-gray-500">Could not load app details.</p>
+        <button (click)="goBack()" class="mt-4 text-blue-500">Go Back</button>
+    </div>
+}
